@@ -9,6 +9,7 @@ import { tokenTypes } from '../config/token.js';
 import tokenServices from '../services/token.service.js';
 import emailServices from '../services/email.service.js';
 import { AuthRequest } from '../models/request.model.js';
+import moment from 'moment';
 
 const register = catchAsync(async (req: AuthRequest, res: Response) => {
   const existingUser = await userServices.getUserByEmail(req.body.email);
@@ -18,10 +19,17 @@ const register = catchAsync(async (req: AuthRequest, res: Response) => {
   }
 
   const userCreated = await userServices.createUser(req.body);
+
+  const userBody = {
+    ...userCreated,
+    createdAt: moment(userCreated.createdAt).format('YYYY-MM-DD'),
+    updatedAt: moment(userCreated.updatedAt).format('YYYY-MM-DD')
+  };
+
   res.status(httpStatus.CREATED).send({
     status: httpStatus.CREATED,
     message: 'register is successfully',
-    data: userCreated
+    data: userBody
   });
 });
 
@@ -54,11 +62,16 @@ const login = catchAsync(async (req: AuthRequest, res: Response) => {
     });
   }
   const tokens = await tokenServices.generateAuthTokens(user.id);
+  const userBody = {
+    ...user,
+    createdAt: moment(user.createdAt).format('YYYY-MM-DD'),
+    updatedAt: moment(user.updatedAt).format('YYYY-MM-DD')
+  };
 
   res.send({
     status: httpStatus.OK,
     message: 'Login is successfully',
-    data: user,
+    data: userBody,
     tokens
   });
 });
