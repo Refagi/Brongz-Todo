@@ -10,3 +10,12 @@ export interface RequestGetTasks {
   completes?: boolean;
   favorites?: boolean;
 }
+
+export interface RequestUpdateTask {
+  title?: string;
+  task?: string;
+}
+
+export interface RequestCompletedTask {
+  isCompleted: boolean;
+}
