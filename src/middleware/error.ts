@@ -14,17 +14,12 @@ export const errorConverter = (err: any, _req: Request, _res: Response, next: Ne
       const message = error.response.data?.message || error.response.data;
       const statusCode = error.response.status;
 
-      logger.info('handleAxiosError');
+      logger.info('handleApiError');
       error = new ApiError(statusCode, message, false, err.stack);
     } else if (err instanceof Prisma.PrismaClientKnownRequestError) {
       // Handling Prisma Error
       logger.info('handlePrismaError');
       error = handlePrismaError(err);
-    }
-    if (err instanceof ZodError) {
-      const statusCode = error.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR;
-      const message = err.message ?? httpStatus[statusCode as keyof typeof httpStatus];
-      error = new ApiError(statusCode, message, false, err.stack);
     } else {
       // Handling global errors
       const statusCode = error.statusCode ?? httpStatus.INTERNAL_SERVER_ERROR;

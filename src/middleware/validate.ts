@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { z, ZodObject } from 'zod';
+import { z, ZodObject, ZodSchema } from 'zod';
 import httpStatus from 'http-status';
 import pick from '../utils/pick.js';
 import { ApiError } from '../utils/ApiError.js';
@@ -25,6 +25,13 @@ const validate = (schema: Schema) => {
         },
         {} as Record<string, any>
       );
+      if (value.query) {
+        Object.defineProperty(req, 'query', {
+          value: value.query,
+          writable: true,
+          configurable: true
+        });
+      }
       Object.assign(req, value);
       return next();
     } catch (error) {

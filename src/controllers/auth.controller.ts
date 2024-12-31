@@ -123,7 +123,8 @@ const sendVerificationEmail = catchAsync(async (req: AuthRequest, res: Response)
 });
 
 const verifyEmail = catchAsync(async (req: AuthRequest, res: Response) => {
-  await authServices.verifyEmail(req.query.tokens as string);
+  const tokens = req.query.tokens as string;
+  await authServices.verifyEmail(tokens);
   res.send({
     status: httpStatus.OK,
     message: 'Email has been verification!'
