@@ -5,7 +5,6 @@ import prisma from '../../prisma/client.js';
 import { ApiError } from '../utils/ApiError.js';
 import bcrypt from 'bcryptjs';
 import { tokenTypes } from '../config/token.js';
-import { Token } from '@prisma/client';
 
 const login = async (email: string, password: string) => {
   const user = await userServices.getUserByEmail(email);

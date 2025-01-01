@@ -39,7 +39,7 @@ const sendResetPasswordEmail = async (to: string, token: string): Promise<void> 
 
 const sendVerificationEmail = async (to: string, token: string): Promise<void> => {
   const subject = 'Email Verification';
-  const verificationEmailUrl = `http://link-to-app/verify-email?token=${token}`;
+  const verificationEmailUrl = `http://localhost:3000/v1/auth/send-verification-email?token=${token}`;
   const text = `Dear user,
   To verify your email, click on this link: ${verificationEmailUrl}
   If you did not create an account, then ignore this email.`;

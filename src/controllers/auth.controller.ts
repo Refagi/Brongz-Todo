@@ -104,16 +104,25 @@ const forgotPassword = catchAsync(async (req: AuthRequest, res: Response) => {
 });
 
 const resetPassword = catchAsync(async (req: AuthRequest, res: Response) => {
-  const reset = await authServices.resetPassword(req.query.tokens as string, req.body.newPassword);
+  await authServices.resetPassword(req.query.tokens as string, req.body.newPassword);
   res.send({
     status: httpStatus.OK,
-    message: 'Reset password is successfully',
-    data: reset
+    message: 'Reset password is successfully'
   });
 });
 
 const sendVerificationEmail = catchAsync(async (req: AuthRequest, res: Response) => {
   const verifyTokenDoc = await tokenServices.generateVerifyEmailToken(req.body.id);
+  const getUser = await prisma.user.findUnique({
+    where: {
+      email: req.body.email
+    }
+  });
+
+  if (!getUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Email is not match with id user');
+  }
+
   await emailServices.sendVerificationEmail(req.body.email, verifyTokenDoc);
   res.send({
     status: httpStatus.OK,
