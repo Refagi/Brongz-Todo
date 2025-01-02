@@ -13,8 +13,7 @@
     "lint:fix": "eslint src/**/*.ts --fix",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "prettier:fix": "prettier --write src/**/*.ts",
-    "test": "vitest",
-    "test:watch": "jest -i --watchAll"
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
