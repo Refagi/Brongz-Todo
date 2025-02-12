@@ -72,6 +72,18 @@ const generateAuthTokens = async (userId: string) => {
   };
 };
 
+const generateRefreshToken = async (userId: string) => {
+  const accessTokenExpires = moment().add(config.jwt.accessExpirationMinutes, 'minutes');
+  const accessToken = await generateToken(userId, accessTokenExpires, tokenTypes.ACCESS);
+
+  return {
+    access: {
+      token: accessToken,
+      expires: accessTokenExpires.toDate()
+    }
+  };
+};
+
 const generateResetPasswordToken = async (email: string) => {
   const user = await userServices.getUserByEmail(email);
   if (!user) {
@@ -112,6 +124,7 @@ export default {
   generateToken,
   saveToken,
   verifyToken,
+  generateRefreshToken,
   getPayloadVerifyToken,
   generateAuthTokens,
   generateResetPasswordToken,

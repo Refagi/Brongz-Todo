@@ -1,7 +1,6 @@
 import httpStatus from 'http-status';
 import prisma from '../../prisma/client.js';
 import { ApiError } from '../utils/ApiError.js';
-import bcrypt from 'bcryptjs';
 import { ResuestCreateTask, RequestGetTasks, RequestUpdateTask, RequestCompletedTask } from '../models/task.model.js';
 
 const createTask = async (userId: string, taskBody: ResuestCreateTask) => {
@@ -9,6 +8,9 @@ const createTask = async (userId: string, taskBody: ResuestCreateTask) => {
     data: {
       title: taskBody.title,
       task: taskBody.task,
+      dueDate: new Date(taskBody.dueDate),
+      isCompleted: taskBody.isCompleted ?? false,
+      isImportant: taskBody.isImportant ?? false,
       userId: userId
     }
   });
@@ -22,63 +24,62 @@ const getTaskById = async (taskId: string) => {
   return task;
 };
 
-const getTasks = async (option: RequestGetTasks) => {
-  let { pages, sizes, titles, completes, favorites } = option;
-  const skip = (pages - 1) * sizes;
-
+const getImportantTask = async (userId: string) => {
   const task = await prisma.task.findMany({
+    where: { userId: userId, isImportant: true }
+  });
+  return task;
+};
+
+const getCompletedTask = async (userId: string) => {
+  const task = await prisma.task.findMany({
+    where: { userId: userId, isCompleted: true }
+  });
+  return task;
+};
+
+const getUncompletedTask = async (userId: string) => {
+  const task = await prisma.task.findMany({
+    where: { userId: userId, isCompleted: false }
+  });
+  return task;
+};
+
+const getTasksByUserId = async (userId: string) => {
+  const task = await prisma.task.findMany({
+    where: { userId: userId }
+  });
+  return task;
+};
+
+const getTasks = async (option: RequestGetTasks) => {
+  let { pages = 1, sizes = 2, title = '', isCompleted, isImportant } = option;
+  const skip = (pages - 1) * sizes;
+  const whereCondition = {
+    AND: [
+      title
+        ? {
+            title: {
+              contains: title
+            }
+          }
+        : {},
+      isCompleted !== undefined ? { isCompleted } : {},
+      isImportant !== undefined ? { isImportant } : {}
+    ].filter((condition) => Object.keys(condition).length > 0)
+  };
+
+  const tasks = await prisma.task.findMany({
     skip: skip,
     take: sizes,
-    where: {
-      OR: [
-        {
-          title: { contains: titles, mode: 'insensitive' }
-        },
-        {
-          isCompleted: completes
-        },
-        {
-          isFavorited: favorites
-        }
-      ]
-    },
+    where: whereCondition.AND.length ? whereCondition : {},
     orderBy: { title: 'asc' }
   });
 
-  let totalData: number = await prisma.task.count();
+  let totalData: number = await prisma.task.count({ where: whereCondition.AND.length ? whereCondition : {} });
   let totalPage: number = Math.ceil(totalData / sizes);
 
-  if (totalData >= 10) {
-    switch (sizes) {
-      case 5:
-        totalData -= 5;
-        break;
-      case 10:
-        totalData -= 10;
-        break;
-      case 15:
-        totalData -= 15;
-        break;
-      case 20:
-        totalData -= 20;
-        break;
-    }
-  }
-
-  let firstPage: number = pages - 3 < 1 ? 1 : pages - 3; //untuk number awal mualai di pagination
-  let lastPage: number = firstPage + 5 <= totalPage ? firstPage + 5 : pages + (totalPage - pages); // untuk number akhir di pagination
-
-  //untuk hitung (angka awal pagination) jika (angka akhir) kurang dari (page + 4)
-  //agar pagination tetap 1 sampai 6 (karena saya menampilkan antara 1 - 6 angka)
-  if (lastPage < pages + 2) {
-    firstPage -= pages + 2 - totalPage;
-  }
-
-  if (totalData <= 5 || totalData <= 10 || totalData <= 15 || totalData <= 20) {
-    firstPage = 1;
-  }
-
-  return { totalData, totalPage, task, pages, sizes, firstPage, lastPage, titles, completes, favorites };
+  return { totalData, totalPage, tasks, pages };
 };
 
 const updateTaskById = async (taskId: string, taskBody: RequestUpdateTask) => {
@@ -90,40 +91,23 @@ const updateTaskById = async (taskId: string, taskBody: RequestUpdateTask) => {
 
   const updateTask = await prisma.task.update({
     where: { id: taskId },
-    data: taskBody
+    data: {
+      title: taskBody.title,
+      task: taskBody.task,
+      dueDate: new Date(taskBody.dueDate),
+      isCompleted: taskBody.isCompleted ?? false,
+      isImportant: taskBody.isImportant ?? false
+    }
   });
 
   return updateTask;
 };
 
-const updateCompletedTask = async (taskId: string, isCompleted: boolean) => {
-  const getTask = await getTaskById(taskId);
-
-  if (!getTask) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found!');
-  }
-
-  const updateCompleted = await prisma.task.update({
-    where: { id: taskId },
-    data: { isCompleted }
+const deleteAllTask = async (userId: string) => {
+  const deleteTask = await prisma.task.deleteMany({
+    where: { userId: userId }
   });
-
-  return updateCompleted;
-};
-
-const updateFavoritedTask = async (taskId: string, isFavorited: boolean) => {
-  const getTask = await getTaskById(taskId);
-
-  if (!getTask) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Task not found!');
-  }
-
-  const updateFavorited = await prisma.task.update({
-    where: { id: taskId },
-    data: { isFavorited }
-  });
-
-  return updateFavorited;
+  return deleteTask;
 };
 
 const deleteTaskById = async (taskId: string) => {
@@ -143,9 +127,12 @@ const deleteTaskById = async (taskId: string) => {
 export default {
   createTask,
   getTaskById,
+  getImportantTask,
+  getCompletedTask,
+  getUncompletedTask,
+  getTasksByUserId,
   getTasks,
   updateTaskById,
-  updateCompletedTask,
-  updateFavoritedTask,
+  deleteAllTask,
   deleteTaskById
 };

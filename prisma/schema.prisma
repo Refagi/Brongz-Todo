@@ -43,8 +43,9 @@ model Task {
   id          String    @id @default(uuid())
   title       String
   task        String
+  dueDate     DateTime
   isCompleted Boolean   @default(false)
-  isFavorited  Boolean   @default(false)
+  isImportant  Boolean   @default(false)
   userId      String
   User        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime  @default(now())

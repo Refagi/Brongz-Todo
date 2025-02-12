@@ -9,7 +9,7 @@ dotenv.config({ path: path.join(__dirname, '../../.env') }); // Menggunakan __di
 // Define Zod schema
 const envSchema = z.object({
   NODE_ENV: z.enum(['production', 'development', 'test']).default('development'),
-  PORT: z.coerce.number().default(4000),
+  PORT: z.coerce.number().default(5500),
   DATABASE_URL: z.string().trim().min(1, { message: 'DATABASE_URL is required' }),
   JWT_SECRET: z.string().trim().min(1, { message: 'JWT_SECRET is required' }),
   JWT_ACCESS_EXPIRATION_MINUTES: z.coerce.number().default(30),

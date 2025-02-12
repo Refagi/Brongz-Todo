@@ -11,7 +11,12 @@ const createTask = {
 
   body: z.object({
     title: z.string(),
-    task: z.string().min(5, { message: 'Task is required must contain at least 5 characters' })
+    task: z.string().min(5, { message: 'Task is required must contain at least 5 characters' }),
+    dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: 'Date must be in the format YYYY-MM-DD'
+    }),
+    isCompleted: z.preprocess((val) => val === true || val === 'true', z.boolean().optional()),
+    isImportant: z.preprocess((val) => val === true || val === 'true', z.boolean().optional())
   })
 };
 
@@ -25,13 +30,23 @@ const getTaskById = {
   })
 };
 
+const getTasksByUserId = {
+  params: z.object({
+    userId: z
+      .string()
+      .regex(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi, {
+        message: '"userId" must be a valid UUID'
+      })
+  })
+};
+
 const getTasks = {
   query: z.object({
-    pages: z.preprocess((val) => Number(val), z.number().optional()),
-    sizes: z.preprocess((val) => Number(val), z.number().optional()),
-    titles: z.string().optional(),
-    completes: z.preprocess((val) => val === 'true', z.boolean().optional()),
-    favorites: z.preprocess((val) => val === 'true', z.boolean().optional())
+    pages: z.preprocess((val) => (val ? Number(val) : 1), z.number().optional()),
+    sizes: z.preprocess((val) => (val ? Number(val) : 2), z.number().optional()),
+    title: z.string().optional(),
+    isCompleted: z.preprocess((val) => val === 'true', z.boolean().optional()),
+    isImportant: z.preprocess((val) => val === 'true', z.boolean().optional())
   })
 };
 
@@ -47,36 +62,21 @@ const updateTaskById = {
   body: z.object({
     title: z.string().optional(),
     task: z.string().min(5, { message: 'Task is required must contain at least 5 characters' }).optional(),
-    isCompletd: z.boolean().optional(),
-    isFavorited: z.boolean().optional()
+    dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
+      message: 'Date must be in the format YYYY-MM-DD'
+    }),
+    isCompleted: z.preprocess((val) => val === true || val === 'true', z.boolean().optional()),
+    isImportant: z.preprocess((val) => val === true || val === 'true', z.boolean().optional())
   })
 };
 
-const updateCompletedTask = {
+const deleteAllTask = {
   params: z.object({
-    taskId: z
+    userId: z
       .string()
       .regex(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi, {
-        message: '"taskId" must be a valid UUID'
+        message: '"userId" must be a valid UUID'
       })
-  }),
-
-  body: z.object({
-    isCompleted: z.boolean()
-  })
-};
-
-const updateFavoritedTask = {
-  params: z.object({
-    taskId: z
-      .string()
-      .regex(/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi, {
-        message: '"taskId" must be a valid UUID'
-      })
-  }),
-
-  body: z.object({
-    isFavorited: z.boolean()
   })
 };
 
@@ -93,9 +93,9 @@ export const deleteTaskById = {
 export default {
   createTask,
   getTaskById,
+  getTasksByUserId,
   getTasks,
   updateTaskById,
-  updateCompletedTask,
-  updateFavoritedTask,
+  deleteAllTask,
   deleteTaskById
 };

@@ -53,7 +53,7 @@ const refreshToken = async (tokens: string) => {
       where: { id: refreshTokenDoc.id }
     });
 
-    return tokenServices.generateAuthTokens(user.id);
+    return tokenServices.generateRefreshToken(user.id);
   } catch (error) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate!');
   }

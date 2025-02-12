@@ -4,7 +4,6 @@ import { ApiError } from '../utils/ApiError.js';
 import bcrypt from 'bcryptjs';
 import { RequestCreateUser, ResquestUpdateUser } from '../models/user.model.js';
 import { User } from '@prisma/client';
-import moment from 'moment';
 
 const createUser = async (userBody: RequestCreateUser) => {
   userBody.password = bcrypt.hashSync(userBody.password, 8);
@@ -15,6 +14,15 @@ const createUser = async (userBody: RequestCreateUser) => {
       email: userBody.email,
       password: userBody.password,
       age: userBody.age
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      password: true,
+      age: true,
+      createdAt: true,
+      updatedAt: true
     }
   });
 };

@@ -6,19 +6,29 @@ import taskValidation from '../../validations/task.validation.js';
 
 const router: Router = express.Router();
 
-router.patch(
-  '/completed-task/:taskId',
+router.get(
+  '/completed-task/:userId',
   auth,
-  validate(taskValidation.updateCompletedTask),
-  taskControllers.updateCompletedTask
+  validate(taskValidation.getTasksByUserId),
+  taskControllers.getCompletedTask
 );
-router.patch(
-  '/favorited-task/:taskId',
+router.get(
+  '/uncompleted-task/:userId',
   auth,
-  validate(taskValidation.updateFavoritedTask),
-  taskControllers.updateFavoritedTask
+  validate(taskValidation.getTasksByUserId),
+  taskControllers.getUncompletedTask
 );
+router.get(
+  '/important-task/:userId',
+  auth,
+  validate(taskValidation.getTasksByUserId),
+  taskControllers.getImportantTask
+);
+
+router.route('/:userId').get(auth, validate(taskValidation.getTasksByUserId), taskControllers.getTasksByUserId);
 router.route('/:userId').post(auth, validate(taskValidation.createTask), taskControllers.createTask);
+router.delete('/deletedAll/:userId', auth, validate(taskValidation.deleteAllTask), taskControllers.deleteAllTask);
+
 router
   .route('/:taskId')
   .get(auth, validate(taskValidation.getTaskById), taskControllers.getTaskById)

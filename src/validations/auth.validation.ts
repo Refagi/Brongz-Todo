@@ -78,7 +78,7 @@ const resetPassword = {
 
 const verifyEmail = {
   query: z.object({
-    tokens: z.string().min(1, { message: 'refresh token must exist!' })
+    tokens: z.string().min(1, { message: 'verify token must exist!' })
   })
 };
 
