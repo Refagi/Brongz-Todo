@@ -19,7 +19,7 @@ http://localhost:5500/auth
 
 
 ## About
-Brongz todo is an app or website that is a clone of (Todo-List)(https://github.com/ZiadSheriif/Todo-List?tab=readme-ov-file) to create task lists.
+Brongz todo is an app or website that is a clone of [Todo-List](https://github.com/ZiadSheriif/Todo-List?tab=readme-ov-file) to create task lists.
 
 ## views
 
