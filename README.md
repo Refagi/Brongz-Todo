@@ -13,5 +13,5 @@ npm run prettier-fix (Format code and fix issues with prettier)
 
 ## Endpoint
 ```
-http://localhost:3000/v1
+http://localhost:5500/v1
 ```

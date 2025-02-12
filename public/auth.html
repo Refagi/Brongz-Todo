@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+    <link rel="stylesheet" href="css/auth.css" />
+
+    <!-- font css -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/fontawesome-free-6.7.2-web/css/all.css" />
+
+    <!-- favicon -->
+    <link rel="icon" href="favicon/favicon.jpeg" type="image/x-icon">
+  </head>
+  <body>
+    <main>
+      <div class="container-login">
+        <!-- login form -->
+        <div class="item-login" id="item-login-form">
+          <div class="header-login">
+            <h2>Welcome Back to Brongz-Todo</h2>
+            <p>Enter your email and password to continue.</p>
+          </div>
+
+          <form id="login-form" method="post">
+            <div class="element-login-email">
+              <label>Email</label>
+              <input type="email" id="loginEmail" placeholder="Enter your email address" name="email" required />
+            </div>
+            <div class="element-login-pw">
+              <label>Password</label>
+              <div class="item-login-pw">
+                <input
+                  type="password"
+                  id="loginPassword"
+                  placeholder="Enter your password"
+                  name="password"
+                  autocomplete="on"
+                  required
+                />
+                <i id="toggle-pw" class="far fa-eye-slash"></i>
+              </div>
+            </div>
+
+            <div class="element-login-fg">
+              <button id="toggle-forgot">Forgot password ?</button>
+            </div>
+
+            <div class="login-btn">
+              <button type="submit">Sign In</button>
+            </div>
+          </form>
+
+          <div class="element-login-rg">
+            <p>Don't have an account? <button id="toggle-register">Register</button></p>
+          </div>
+        </div>
+
+        <!-- register form -->
+        <div class="item-register" id="item-register-form" style="display: none">
+          <div class="header-register">
+            <h2>Create Your Brongz-Todo account</h2>
+            <p>Sign up to continue</p>
+          </div>
+
+          <form action="/v1/auth/register" method="post" id="register-form">
+            <div class="element-register-username">
+              <label>Username</label>
+              <input type="text" id="registerUsername" placeholder="Enter Username" name="username" required />
+            </div>
+            <div class="element-register-email">
+              <label>Email</label>
+              <input
+                type="email"
+                id="registerEmail"
+                placeholder="Enter your email address"
+                name="email-regist"
+                required
+              />
+            </div>
+            <div class="element-register-pw">
+              <label>Password</label>
+              <div class="item-register-pw">
+                <input
+                  type="password"
+                  id="registerPassword"
+                  placeholder="Enter your password"
+                  name="password"
+                  autocomplete="on"
+                  required
+                />
+                <i id="toggle-pw-register" class="far fa-eye-slash"></i>
+              </div>
+            </div>
+            <div class="element-register-age">
+              <label>Age</label>
+              <input type="number" id="registerAge" placeholder="Enter your Age" name="age" required />
+            </div>
+
+            <div class="register-btn">
+              <button type="submit" id="regist-btn">Sign Up</button>
+            </div>
+          </form>
+
+          <div class="element-register-rg">
+            <p>Already have an account? <button id="toggle-login">Login</button></p>
+          </div>
+        </div>
+
+        <!-- Forgot password -->
+        <div class="item-forgotPassword" id="item-forgotPassword-form" style="display: none">
+          <div class="header-forgotPassword">
+            <div class="back-btn" id="toggle-back">
+              <i class="fas fa-reply"></i>
+              <button>Back</button>
+            </div>
+            <h2>Forgot Password</h2>
+            <p>No worries! Enter your email address below, and we'll</p>
+            <p>send you a link to reset your password</p>
+          </div>
+
+          <form id="forgot-password-form" method="post">
+            <div class="element-forgotPassword-email">
+              <label>Email</label>
+              <input
+                type="email"
+                id="forgotPasswordEmail"
+                placeholder="Enter your email address"
+                name="email-forgot"
+                required
+              />
+            </div>
+
+            <div class="forgotPassword-btn">
+              <button>Submit</button>
+            </div>
+          </form>
+          <div class="text-footer">
+            <p>After submit, Check your email</p>
+          </div>
+        </div>
+
+        <!-- send verification email -->
+        <div class="item-sendVerif" id="item-sendVerif-form" style="display: none">
+          <div class="header-sendVerif">
+            <h2>Send Verification Email</h2>
+            <p>Enter your email address below, and we'll</p>
+            <p>send you a link to verification your email</p>
+          </div>
+
+          <form action="/v1/auth/send-verification-email" id="sendVerif-form" method="post">
+            <div class="element-sendVerif-email">
+              <input type="hidden" id="sendVerifId" placeholder="" name="id" required />
+            </div>
+            <div class="element-sendVerif-email">
+              <label>Email</label>
+              <input type="email" id="sendVerifEmail" placeholder="Enter your email address" name="email" required />
+            </div>
+
+            <div class="sendVerif-btn">
+              <button type="submit" id="sendVerif-btn">Submit</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="quote-login">
+          <h1>"Simplify your task management with Brongz-Todo"</h1>
+          <p></p>
+        </div>
+      </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js//register.js"></script>
+    <script src="js/send-verif.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/forgotPassword.js"></script>
+  </body>
+</html>

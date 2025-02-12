@@ -154,12 +154,6 @@ const refreshToken = catchAsync(async (req: AuthRequest, res: Response) => {
 const forgotPassword = catchAsync(async (req: AuthRequest, res: Response) => {
   const resetPasswordToken = await tokenServices.generateResetPasswordToken(req.body.email);
   await emailServices.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  // res.cookie('resetToken', resetPasswordToken, {
-  //   httpOnly: true, // Prevent XSS attacks
-  //   secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-  //   sameSite: 'lax', // Prevent CSRF
-  //   maxAge: 15 * 60 * 1000 // 15 minutes
-  // });
   res.send({
     status: httpStatus.OK,
     message: `Reset password link has been sent to ${req.body.email}`,
@@ -186,13 +180,6 @@ const sendVerificationEmail = catchAsync(async (req: AuthRequest, res: Response)
   if (!getUser) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Email is not match with id user');
   }
-
-  // res.cookie('verifyToken', verifyTokenDoc, {
-  //   httpOnly: false, // Prevent XSS attacks
-  //   secure: process.env.NODE_ENV === 'production', // HTTPS only in production
-  //   sameSite: 'lax', // Prevent CSRF
-  //   maxAge: 15 * 60 * 1000 // 15 minutes
-  // });
 
   await emailServices.sendVerificationEmail(req.body.email, verifyTokenDoc);
   res.send({

@@ -59,17 +59,6 @@ app.use(
 
 app.use(xss());
 
-// enable cors
-// app.use(
-//   '/v1/*',
-//   cors({
-//     origin: 'https://your-production-domain.com', //production
-//     credentials: true, // Izinkan cookies dikirim dari frontend
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-//     allowedHeaders: ['Content-type', 'Authorization']
-//   })
-// );
-
 app.use(
   cors({
     origin: process.env.URL_CORS, // Sesuaikan dengan frontend URL development
@@ -88,7 +77,7 @@ app.use(cookieParser());
 // gzip compression
 app.use(compression());
 
-const publicPath = path.resolve(__dirname, '../../../Frontend/public');
+const publicPath = path.resolve(__dirname, '../../public');
 app.use(express.static(publicPath));
 
 // jwt authentication
