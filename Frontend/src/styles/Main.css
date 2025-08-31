@@ -1,0 +1,46 @@
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Oswald:wght@200..700&display=swap');
+
+
+:root {
+  --base-color: aliceblue;
+  --base-variant: #e8e9ed;
+  --text-color: #031d44;
+  --secondary-text: #ffff;
+  --primary-color: #001233;
+  --accent-color: #6c757d;
+  --property-color: #d62828;
+  --border-color: #e5e5e5; 
+  --form-color: aliceblue;
+}
+
+.darkmode {
+  --base-color: #001845;
+  --base-variant: #e8e9ed;
+  --text-color: aliceblue;
+  --secondary-text: #e8e9ed;
+  --primary-color: #001233;
+  --accent-color: #6c757d;
+  --property-color: #d62828;
+  --border-color: #031d44;
+  --form-color: aliceblue;
+
+}
+
+*, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--base-color);
+  color: var(--text-color);
+  min-height: 100vh
+}
+
+/* @media (max-width: 1100px) {
+  .textUsername {
+    display: none;
+  }
+} */

@@ -1,0 +1,43 @@
+*,
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.containerLogin {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  min-height: 90vh;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .containerLogin {
+    flex-direction: column;
+    min-height: auto;
+    width: 100%;
+    padding: 8px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .containerLogin {
+    padding: 4px;
+  }
+}
